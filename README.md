@@ -59,8 +59,3 @@ python server.py
 ```
 
 Visit `http://localhost:5000` in your browser.
-
-```
-
-Feel free to expand and customize this documentation based on your app's features and structure. If you have specific questions or need more detailed information, feel free to ask.
-```
