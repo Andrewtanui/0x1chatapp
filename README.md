@@ -1,31 +1,5 @@
 
 ```markdown
-# Flask App Documentation
-
-## Overview
-
-This document provides an overview and documentation for the Flask app developed with Flask-SocketIO, Flask-Login, and MongoDB.
-
-## Project Structure
-
-```
-/0x1chatapp
-|-- /static
-|   |-- /css
-|   |-- /js
-|-- /templates
-|-- server.py
-|-- models.py
-|-- func.py
-|-- requirements.txt
-
-```
-
-- **/static**: Contains static files (CSS, JavaScript).
-- **/templates**: Contains HTML templates.
-- **app.py**: Main application file.
-- **requirements.txt**: List of Python dependencies.
-
 ## Dependencies
 
 - Flask
