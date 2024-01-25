@@ -1,12 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{title}}</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Chat app</title>
+    {% endif %}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+
+    {% block header %}{% endblock header %}
 </head>
+
 <body>
-  <p>{{ hello }}</p>
+        <nav x-data="{ isOpen: false }" class="bg-white shadow dark:bg-gray-800">
+        <div class="container px-6 py-4 mx-auto">
+            <div class="lg:flex lg:items-center">
+                <div class="flex items-center justify-between">
+                    <a href="{{url_for('home')}}">
+                        <!-- <img class="w-auto h-6 sm:h-7" src="favicon.ico" alt=""> -->
+                        <h3 class="text-3xl font-bold text-indigo-500">GroupChat</h3>
+                    </a>
+
+                    <!-- Mobile menu button -->
+                    <div class="flex lg:hidden">
+                        <button x-cloak @click="isOpen = !isOpen" type="button" class="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400" aria-label="toggle menu">
+                            <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                            </svg>
+                    
+                            <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']" class="absolute inset-x-0 z-20 flex-1 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center lg:justify-between">
+                    <div class="flex flex-col text-gray-600 capitalize dark:text-gray-300 lg:flex lg:px-16 lg:-mx-4 lg:flex-row lg:items-center">
+                        <!-- <a href="#" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Capabilities</a> -->
+                        <!-- <a href="#" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Use cases</a> -->
+                        <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Buy service</a>
+                        <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Privacy</a>
+        
+                        <div class="relative mt-4 lg:mt-0 lg:mx-4">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" viewBox="0 0 24 24" fill="none">
+                                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </span>
+                            {% if current_user.is_authenticated %}
+                            <input type="text" class="table-filter w-full py-1 pl-10 pr-4 text-gray-700 placeholder-gray-600 bg-white border-b border-gray-600 dark:placeholder-gray-300 dark:focus:border-gray-300 lg:w-56 lg:border-transparent dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:border-gray-600" autofocus data-table="order-table" placeholder="Search">
+                            {% else %}
+                            <form action="/search" method="get">
+                                <input type="text" class="w-full py-1 pl-10 pr-4 text-gray-700 placeholder-gray-600 bg-white border-b border-gray-600 dark:placeholder-gray-300 dark:focus:border-gray-300 lg:w-56 lg:border-transparent dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:border-gray-600" autofocus autocomplete="off" placeholder="Search" name="query">
+                                <button type="submit" hidden>Search</button>
+                            </form> 
+                            
+                            {% endif %}
+                        </div>
+                    </div>
+        
+                    <div class="flex justify-center mt-6 lg:flex lg:mt-0 lg:-mx-2">
+                        {% if current_user.is_authenticated %}
+                        <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Log Out</a>
+                        <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Add Service</a>
+                        <a href="" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500">
+                            <span class="sr-only">View notifications</span>
+                            <!-- Heroicon name: outline/bell -->
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                          </a>
+                        {% else %}
+                        <div class="flex px-5">
+                            <a href="" class="-m-2 p-2 text-gray-400 hover:text-gray-500">
+                            <span class="sr-only">Account</span>
+                            <!-- Heroicon name: outline/user -->
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if not current_user.is_authenticated %}
+                        <div class="flow-root">
+                            <a href="" class="group -m-2 p-2 flex items-center">
+                                <!-- Heroicon name: outline/shopping-cart -->
+                                <svg class="flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </a>
+                            </div>
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+<!-- Nav bar ends here  -->
+<!-- Flashed messages  -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      {% if category == "error" %}
+<div x-data="{ showAlert: true }">
+<div class="w-full text-white bg-red-500" x-show="showAlert">
+        <div class="container flex items-center justify-between px-6 py-4 mx-auto">
+            <div class="flex">
+                <p class="mx-3">{{ message }}</p>
+            </div>
+
+            <button
+                class="p-1 transition-colors duration-300 transform rounded-md hover:bg-opacity-25 hover:bg-gray-600 focus:outline-none"
+                @click="showAlert = false"
+            >
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+    </div>
+  </div>
+  {% elif category == "success"%}
+<div x-data="{ showAlert: true }">
+<div class="w-full text-white bg-emerald-500" x-show="showAlert">
+        <div class="container flex items-center justify-between px-6 py-4 mx-auto">
+            <div class="flex">
+                <svg viewBox="0 0 40 40" class="w-6 h-6 fill-current">
+                    <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z">
+                    </path>
+                </svg>
+
+                <p class="mx-3">{{ message }}</p>
+            </div>
+
+            <button
+                class="p-1 transition-colors duration-300 transform rounded-md hover:bg-opacity-25 hover:bg-gray-600 focus:outline-none"
+                @click="showAlert = false"
+            >
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+    </div>
+  </div>
+  {% else %}
+<div x-data="{ showAlert: true }">
+<div class="w-full text-white bg-yellow-400" x-show="showAlert">
+        <div class="container flex items-center justify-between px-6 py-4 mx-auto">
+            <div class="flex">
+                <p class="mx-3">{{ message }}</p>
+            </div>
+
+            <button
+                class="p-1 transition-colors duration-300 transform rounded-md hover:bg-opacity-25 hover:bg-gray-600 focus:outline-none"
+                @click="showAlert = false"
+            >
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+    </div>
+  </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<!-- flashed messages ends here  -->
+
+{% block body %}
+
+{% endblock body %}
+
   
 
   <script src="/socket.io/socket.io.js"></script>
