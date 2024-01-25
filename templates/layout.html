@@ -18,13 +18,14 @@
 </head>
 
 <body>
+        {% if not chat %}
         <nav x-data="{ isOpen: false }" class="bg-white shadow dark:bg-gray-800">
         <div class="container px-6 py-4 mx-auto">
             <div class="lg:flex lg:items-center">
                 <div class="flex items-center justify-between">
                     <a href="{{url_for('home')}}">
                         <!-- <img class="w-auto h-6 sm:h-7" src="favicon.ico" alt=""> -->
-                        <h3 class="text-3xl font-bold text-indigo-500">GroupChat</h3>
+                        <h3 class="text-3xl font-bold text-indigo-500">Virtual Group Concepts</h3>
                     </a>
 
                     <!-- Mobile menu button -->
@@ -45,8 +46,8 @@
                     <div class="flex flex-col text-gray-600 capitalize dark:text-gray-300 lg:flex lg:px-16 lg:-mx-4 lg:flex-row lg:items-center">
                         <!-- <a href="#" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Capabilities</a> -->
                         <!-- <a href="#" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Use cases</a> -->
-                        <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Buy service</a>
-                        <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Privacy</a>
+                        <!-- <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Buy service</a>
+                        <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Privacy</a> -->
         
                         <div class="relative mt-4 lg:mt-0 lg:mx-4">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -54,20 +55,20 @@
                                     <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                 </svg>
                             </span>
-                            {% if current_user.is_authenticated %}
-                            <input type="text" class="table-filter w-full py-1 pl-10 pr-4 text-gray-700 placeholder-gray-600 bg-white border-b border-gray-600 dark:placeholder-gray-300 dark:focus:border-gray-300 lg:w-56 lg:border-transparent dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:border-gray-600" autofocus data-table="order-table" placeholder="Search">
-                            {% else %}
+                        
+                            <!-- <input type="text" class="table-filter w-full py-1 pl-10 pr-4 text-gray-700 placeholder-gray-600 bg-white border-b border-gray-600 dark:placeholder-gray-300 dark:focus:border-gray-300 lg:w-56 lg:border-transparent dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:border-gray-600" autofocus data-table="order-table" placeholder="Search"> -->
+                            
                             <form action="/search" method="get">
                                 <input type="text" class="w-full py-1 pl-10 pr-4 text-gray-700 placeholder-gray-600 bg-white border-b border-gray-600 dark:placeholder-gray-300 dark:focus:border-gray-300 lg:w-56 lg:border-transparent dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:border-gray-600" autofocus autocomplete="off" placeholder="Search" name="query">
                                 <button type="submit" hidden>Search</button>
                             </form> 
                             
-                            {% endif %}
+                            
                         </div>
                     </div>
         
                     <div class="flex justify-center mt-6 lg:flex lg:mt-0 lg:-mx-2">
-                        {% if current_user.is_authenticated %}
+                    
                         <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Log Out</a>
                         <a href="" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">Add Service</a>
                         <a href="" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500">
@@ -77,7 +78,7 @@
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
                           </a>
-                        {% else %}
+                        
                         <div class="flex px-5">
                             <a href="" class="-m-2 p-2 text-gray-400 hover:text-gray-500">
                             <span class="sr-only">Account</span>
@@ -87,8 +88,7 @@
                             </svg>
                             </a>
                         </div>
-                        {% endif %}
-                        {% if not current_user.is_authenticated %}
+                        
                         <div class="flow-root">
                             <a href="" class="group -m-2 p-2 flex items-center">
                                 <!-- Heroicon name: outline/shopping-cart -->
@@ -97,13 +97,13 @@
                                 </svg>
                             </a>
                             </div>
-                            {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 <!-- Nav bar ends here  -->
+{% endif %}
 <!-- Flashed messages  -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
