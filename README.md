@@ -1,4 +1,3 @@
-Certainly! Below is a basic template for an MD file to document your Flask app with Flask-SocketIO, Flask-Login, and MongoDB. Please customize it according to your specific project structure and requirements.
 
 ```markdown
 # Flask App Documentation
@@ -19,6 +18,7 @@ This document provides an overview and documentation for the Flask app developed
 |-- models.py
 |-- func.py
 |-- requirements.txt
+
 ```
 
 - **/static**: Contains static files (CSS, JavaScript).
