@@ -29,7 +29,7 @@ This Flask Chat App is designed to provide users with a platform for creating gr
 
 Before you begin, ensure you have met the following requirements:
 
-- Python installed (version x.x.x)
+- Python installed (version 3.12.1)
 - SQLite or another relational database system
 - Pipenv installed (for dependency management)
 
