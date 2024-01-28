@@ -4,13 +4,14 @@ from flask_sqlalchemy import SQLAlchemy
 import uuid
 from dotenv import load_dotenv,find_dotenv
 import os
+from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
 
 app = Flask(__name__)
-
+socketio = SocketIO(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///database.db'
 UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -112,7 +113,7 @@ class Message(db.Model):
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.now, nullable=False)
     user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     group_id = db.Column(db.String(36), db.ForeignKey('groups.id'), nullable=False)
 
@@ -137,10 +138,13 @@ def home():
 @app.route('/chat')
 @login_required
 def chat():
+    user = current_user
+    profile = Profile.query.filter_by(user_id=user.id).first()
 
-  return render_template("chat.html",
+    return render_template("chat.html",
                          title="Chap app project",
-                         chat=True)
+                         chat=True,
+                         profile=profile)
 
 
 @app.route('/profile')
